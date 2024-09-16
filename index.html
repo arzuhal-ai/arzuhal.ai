@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,26 +7,38 @@
      <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Arzuhal.ai</h1>
+    <h1>Arzuhal.ai</h1>
+    <form id="dilekce-form">
+        <label for="kisiAdi">Kime:</label>
+        <input type="text" id="kisiAdi" name="kisiAdi" required><br><br>
 
-        <form id="dilekce-form">
-            <div class="form-group">
-                <label for="kisiAdi">Yetkili Kişi/Makam Adı:</label>
-                <input type="text" id="kisiAdi" name="kisiAdi" placeholder="Yetkili adı/makamı" required>
-            </div>
+        <label for="anahtarKelime">Anahtar Kelime:</label>
+        <input type="text" id="anahtarKelime" name="anahtarKelime" required><br><br>
 
-            <div class="form-group">
-                <label for="anahtarKelime">Anahtar Kelime:</label>
-                <input type="text" id="anahtarKelime" name="anahtarKelime" placeholder="Anahtar kelime girin" required>
-            </div>
+        <button type="submit">Dilekçe Oluştur</button>
+    </form>
 
-            <button type="submit">Dilekçeyi Oluştur</button>
-        </form>
+    <h2>Oluşturulan Dilekçe:</h2>
+    <p id="output"></p>
 
-        <div id="output" class="output"></div>
-    </div>
+    <script>
+        document.getElementById('dilekce-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const kisiAdi = document.getElementById('kisiAdi').value;
+            const anahtarKelime = document.getElementById('anahtarKelime').value;
 
-   <script src="script.js"></script>
+            const response = await fetch('/generate-dilekce', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ kisiAdi, anahtarKelime })
+            });
+
+            const data = await response.json();
+            document.getElementById('output').innerText = data.generated_text;
+        });
+    </script>
 </body>
 </html>
